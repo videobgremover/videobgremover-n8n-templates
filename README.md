@@ -44,5 +44,4 @@ Use these for testing:
 ## Docs
 
 **API Documentation:** https://docs.videobgremover.com/  
-**n8n Integration Guide:** https://videobgremover.com/integrations/n8n  
 **Support:** paul@videobgremover.com
