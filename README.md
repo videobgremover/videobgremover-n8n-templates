@@ -18,12 +18,21 @@ Remove video background, composite on custom background, save to Google Drive.
 
 ---
 
-## Quick Start
+## 🚀 Quick Start
 
-1. Import template: **n8n → Import from URL**
-2. Add API key: **Settings → Variables → `VIDEOBGREMOVER_KEY`**
-3. Connect Google Drive
-4. Test with sample videos
+You can import the workflow directly into n8n:
+
+1. In n8n, go to **Workflows → Import from URL**
+2. Paste this link:
+
+```
+https://raw.githubusercontent.com/videobgremover/videobgremover-n8n-templates/main/templates/01-video-composition-gdrive.json
+```
+
+3. Click **Import**
+4. Add your API key: **Settings → Variables → `VIDEOBGREMOVER_KEY`**
+5. Connect Google Drive
+6. Test with sample videos
 
 Get your API key: https://videobgremover.com/api-management
 
