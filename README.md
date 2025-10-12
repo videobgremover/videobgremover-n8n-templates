@@ -9,7 +9,7 @@ Remove video background, composite on custom background, save to Google Drive.
 
 **Features:**
 - Background removal
-- Video composition with templates postion (ai_ugc_ad, centered, etc.)
+- Video composition with templates (ai_ugc_ad, centered, etc.)
 - Audio mixing from both videos
 - Google Drive upload
 - Status polling with retry logic
@@ -18,23 +18,51 @@ Remove video background, composite on custom background, save to Google Drive.
 
 ---
 
+### 02-ugc-screenrecord-video.json
+AI-powered UGC ad generator: App screen recording → Gemini analysis → Sora 2 AI actor → VBR composition.
+
+**Features:**
+- Gemini AI analyzes screen recording & generates ad structure
+- Sora 2 creates AI actor delivering UGC-style ad
+- Background removal on AI actor
+- Composites actor over screen recording (ai_ugc_ad template)
+- Audio mixing (30% background + 100% actor)
+- Google Drive upload
+
+**Perfect for:**
+- App developers creating UGC-style ads
+- SaaS product marketing
+- Mobile app feature announcements
+- Digital product launches
+
+**Setup:** ~10 min (3 API keys) | **Processing:** 5-8 min total
+
+---
+
 ## 🚀 Quick Start
 
-You can import the workflow directly into n8n:
+### Template 01: Video Composition
 
 1. In n8n, go to **Workflows → Import from URL**
-2. Paste this link:
-
-```
-https://raw.githubusercontent.com/videobgremover/videobgremover-n8n-templates/main/templates/01-video-composition-gdrive.json
-```
-
+2. Paste: `https://raw.githubusercontent.com/videobgremover/videobgremover-n8n-templates/main/templates/01-video-composition-gdrive.json`
 3. Click **Import**
-4. Add your API key: **Settings → Variables → `VIDEOBGREMOVER_KEY`**
+4. Add API key: **Settings → Variables → `VIDEOBGREMOVER_KEY`**
 5. Connect Google Drive
 6. Test with sample videos
 
-Get your API key: https://videobgremover.com/api-management
+### Template 02: AI UGC Ad Generator
+
+1. In n8n, go to **Workflows → Import from URL**
+2. Paste: `https://raw.githubusercontent.com/videobgremover/videobgremover-n8n-templates/main/templates/02-ugc-screenrecord-video.json`
+3. Click **Import**
+4. Add API keys: **Settings → Variables**
+   - `GEMINI_KEY` → Get from https://aistudio.google.com/apikey
+   - `FAL_KEY` → Get from https://fal.ai/dashboard/keys
+   - `VIDEOBGREMOVER_KEY` → Get from https://videobgremover.com/api-management
+5. Connect Google Drive
+6. Test with sample screen recording
+
+Get your VideoBGRemover API key: https://videobgremover.com/api-management
 
 ---
 

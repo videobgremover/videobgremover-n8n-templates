@@ -24,15 +24,89 @@
     },
     {
       "parameters": {
+        "height": 620,
+        "width": 520,
+        "content": "## 🎬 AI UGC Ad Generator\n\n**What it does:**\n- Analyzes app screen recording with Gemini AI\n- Generates UGC ad structure (hook, problem, solution, CTA)\n- Creates AI actor video with Sora 2\n- Removes background from actor\n- Composites actor over screen recording\n- Saves final UGC ad to Google Drive\n\n**Perfect for:**\n- App developers creating UGC-style ads\n- SaaS products with screen demos\n- Mobile app marketing teams\n- Digital product launches\n- Feature announcement videos\n\n**Processing time:** 5-8 minutes total\n- Gemini analysis: ~30s\n- Sora 2 generation: ~2-4 min\n- Background removal + composition: ~2-3 min\n\n**Setup:** ~10 minutes (3 API keys)\n\n[📖 Full Documentation](https://docs.videobgremover.com/)"
+      },
+      "id": "sticky-overview",
+      "name": "📋 Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1980, -320],
+      "notesTextSize": "large",
+      "notesBackgroundColor": 4
+    },
+    {
+      "parameters": {
+        "height": 480,
+        "width": 420,
+        "content": "## 🔑 API Keys Setup (Required)\n\n**1. Gemini API Key**\n- Visit: https://aistudio.google.com/apikey\n- Create new API key\n- Add to n8n: Settings → Variables\n  - Name: `GEMINI_KEY`\n  - Value: your Gemini API key\n\n**2. FAL AI Key (for Sora 2)**\n- Visit: https://fal.ai/dashboard/keys\n- Sign up and create API key\n- Add to n8n: Settings → Variables\n  - Name: `FAL_KEY`\n  - Value: your FAL key\n\n**3. VideoBGRemover API Key**\n- Visit: https://videobgremover.com/api-management\n- Sign up (free tier available)\n- Add to n8n: Settings → Variables\n  - Name: `VIDEOBGREMOVER_KEY`\n  - Value: your API key\n\n✅ All keys use `$vars.` (secure)"
+      },
+      "id": "sticky-api-keys",
+      "name": "🔑 API Keys",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1520, -320]
+    },
+    {
+      "parameters": {
+        "height": 400,
+        "width": 420,
+        "content": "## 📥 Input Required\n\n**screenshot_video_url** (required)\n- URL to your app screen recording\n- Should be vertical (9:16 aspect ratio)\n- Duration: 4-12 seconds recommended\n- Must be publicly accessible\n\n**meta** (optional)\n- `product_name`: Name of app/feature\n- `benefits`: Array of key benefits\n- `tone`: Desired ad tone (friendly, professional, etc.)\n\n**Example:**\n```json\n{\n  \"screenshot_video_url\": \"https://...\",\n  \"meta\": {\n    \"product_name\": \"MyApp Pro\",\n    \"benefits\": [\"Fast\", \"Easy\", \"Powerful\"],\n    \"tone\": \"friendly\"\n  },\n  \"store_to_drive\": true\n}\n```"
+      },
+      "id": "sticky-inputs",
+      "name": "📥 Inputs",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1060, -320]
+    },
+    {
+      "parameters": {
+        "height": 520,
+        "width": 420,
+        "content": "## 🔄 Workflow Steps\n\n**1. Gemini Analysis** (~30s)\n- Uploads screen recording to Gemini\n- AI analyzes app/feature shown\n- Generates UGC ad structure:\n  - `ad_topic`: What's being promoted\n  - `hook`: Attention grabber (5-8 words)\n  - `problem`: Pain point (12-15 words)\n  - `solution`: Fix presented (12-15 words)\n  - `cta`: Call-to-action (5-8 words)\n  - `visual_details`: Actor description\n  - `emotional_journey`: Emotion flow\n\n**2. Sora 2 Generation** (~2-4 min)\n- Creates AI actor video\n- Natural UGC-style delivery\n- Matches emotional journey\n- 4, 8, or 12 second duration\n\n**3. VBR Composition** (~2-3 min)\n- Removes actor background\n- Composites over screen recording\n- Bottom-right corner positioning\n- Audio mixing (30% bg + 100% fg)"
+      },
+      "id": "sticky-workflow",
+      "name": "🔄 Workflow",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-600, -320]
+    },
+    {
+      "parameters": {
         "height": 340,
         "width": 460,
         "content": "## 🎯 Sora Prompt Structure\n\n**Template:**\n[ICP/visual details] filming a UGC ad about [APP CONTEXT].\nThey start by saying: [hook],\nthen explain: [problem],\npresent the solution: [solution],\nand end with: [CTA].\n[Emotional journey]. [Camera style].\nNatural hand gestures and expressions.\n\n**Key Elements:**\n- `ad_topic`: What app/feature is being promoted\n- `visual_details`: Actor description + setting\n- `ad_structure`: Hook, problem, solution, CTA\n- `emotional_journey`: How emotions progress\n- Camera style extracted from visual_details\n\n✅ This structure makes Sora understand CONTEXT vs WHAT TO GENERATE"
       },
       "id": "sticky-sora-structure",
-      "name": "📝 Sora Prompt Structure",
+      "name": "📝 Sora Prompt",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [60, -120]
+      "position": [-100, -320]
+    },
+    {
+      "parameters": {
+        "height": 340,
+        "width": 380,
+        "content": "## 💾 Google Drive Setup\n\n**Step 1:** Connect Google Drive\n- Click \"Upload to Google Drive\" node\n- Click \"Connect\"\n- Authorize n8n\n\n**Step 2:** Choose folder (optional)\n- Default: Root of \"My Drive\"\n- Or select specific folder\n\n**Output:**\n- Permanent shareable link\n- Direct download URL\n- File metadata\n- Drive file ID\n\n⏱️ Setup time: ~2 minutes\n\n**Note:** Files are named automatically:\n`ugc_final_[timestamp].mp4`"
+      },
+      "id": "sticky-gdrive",
+      "name": "💾 Google Drive",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [400, -320]
+    },
+    {
+      "parameters": {
+        "height": 480,
+        "width": 420,
+        "content": "## 🚀 How to Use\n\n**Manual testing:**\n1. Update `screenshot_video_url` in \"Sample Input\"\n2. Optionally update `meta` object\n3. Click \"Execute Workflow\"\n4. Wait 5-8 minutes for processing\n5. Check Google Drive for final video\n\n**Webhook automation:**\n1. Activate workflow\n2. Copy webhook URL\n3. POST to webhook:\n```json\n{\n  \"screenshot_video_url\": \"https://...\",\n  \"meta\": {\n    \"product_name\": \"MyApp\",\n    \"benefits\": [\"Fast\", \"Easy\"],\n    \"tone\": \"friendly\"\n  },\n  \"store_to_drive\": true\n}\n```\n\n**Tips:**\n- Use 9:16 vertical videos\n- Keep recordings 4-12 seconds\n- Test with sample video first"
+      },
+      "id": "sticky-usage",
+      "name": "🚀 Usage",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [860, -320]
     },
     {
       "parameters": {
@@ -83,6 +157,19 @@
     },
     {
       "parameters": {
+        "height": 100,
+        "width": 1100,
+        "content": "## 🤖 GEMINI AI ANALYSIS SECTION\nAnalyzes screen recording → Generates ad structure (hook, problem, solution, CTA, actor details)"
+      },
+      "id": "sticky-section-gemini",
+      "name": "Section: Gemini",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-900, 380],
+      "notesBackgroundColor": 5
+    },
+    {
+      "parameters": {
         "url": "={{ $json.screenshot_video_url }}",
         "options": {}
       },
@@ -90,7 +177,7 @@
       "name": "Download Screenshot Video",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [-860, 160]
+      "position": [-860, 460]
     },
     {
       "parameters": {
@@ -112,7 +199,7 @@
       "name": "Upload to Gemini",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [-640, 160]
+      "position": [-640, 460]
     },
     {
       "parameters": {
@@ -123,7 +210,7 @@
       "name": "Wait for Processing",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [-420, 160]
+      "position": [-420, 460]
     },
     {
       "parameters": {
@@ -139,7 +226,7 @@
       "name": "Gemini – Analyze & Plan",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [-180, 160]
+      "position": [-180, 460]
     },
     {
       "parameters": {
@@ -149,7 +236,20 @@
       "name": "Extract & Parse",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [40, 160]
+      "position": [60, 460]
+    },
+    {
+      "parameters": {
+        "height": 100,
+        "width": 940,
+        "content": "## 🎨 SORA 2 AI VIDEO GENERATION SECTION\nGenerates AI actor video based on Gemini's plan → UGC-style talking head video"
+      },
+      "id": "sticky-section-sora",
+      "name": "Section: Sora 2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [280, 680],
+      "notesBackgroundColor": 6
     },
     {
       "parameters": {
@@ -159,7 +259,7 @@
       "name": "Build Sora Prompt",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [260, 160]
+      "position": [300, 760]
     },
     {
       "parameters": {
@@ -178,7 +278,7 @@
       "name": "Sora 2 – Submit (fal.ai)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [480, 160]
+      "position": [520, 760]
     },
     {
       "parameters": {
@@ -191,7 +291,7 @@
       "name": "Sora – Check Status",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [700, 160]
+      "position": [740, 760]
     },
     {
       "parameters": {"amount": 20, "unit": "seconds"},
@@ -199,7 +299,7 @@
       "name": "Wait 20s",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [920, 260]
+      "position": [960, 860]
     },
     {
       "parameters": {
@@ -215,7 +315,7 @@
       "name": "Sora Completed?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [920, 160]
+      "position": [960, 760]
     },
     {
       "parameters": {
@@ -227,7 +327,20 @@
       "name": "Sora – Get Result",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1140, 160]
+      "position": [1180, 760]
+    },
+    {
+      "parameters": {
+        "height": 100,
+        "width": 1240,
+        "content": "## 🎬 VIDEOBGREMOVER COMPOSITION SECTION\nRemoves AI actor background → Composites over screen recording → Mixes audio"
+      },
+      "id": "sticky-section-vbr",
+      "name": "Section: VideoBGRemover",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1400, 980],
+      "notesBackgroundColor": 2
     },
     {
       "parameters": {
@@ -246,7 +359,7 @@
       "name": "VBR – Create Job (Foreground=Sora)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1360, 160]
+      "position": [1400, 1060]
     },
     {
       "parameters": {
@@ -265,7 +378,7 @@
       "name": "VBR – Start Composition",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1580, 160]
+      "position": [1620, 1060]
     },
     {
       "parameters": {
@@ -279,7 +392,7 @@
       "name": "VBR – Check Status",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.1,
-      "position": [1800, 160]
+      "position": [1840, 1060]
     },
     {
       "parameters": {"amount": 20, "unit": "seconds"},
@@ -287,7 +400,7 @@
       "name": "Wait 20s (VBR)",
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
-      "position": [2000, 260]
+      "position": [2060, 1160]
     },
     {
       "parameters": {
@@ -303,7 +416,7 @@
       "name": "VBR Completed?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [2000, 160]
+      "position": [2060, 1060]
     },
     {
       "parameters": {
@@ -318,7 +431,20 @@
       "name": "Prepare Final URL",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.3,
-      "position": [2200, 160]
+      "position": [2280, 1060]
+    },
+    {
+      "parameters": {
+        "height": 100,
+        "width": 900,
+        "content": "## 💾 OUTPUT SECTION\nDownload final video → Upload to Google Drive → Return response"
+      },
+      "id": "sticky-section-output",
+      "name": "Section: Output",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [2480, 1280],
+      "notesBackgroundColor": 3
     },
     {
       "parameters": {
@@ -329,7 +455,7 @@
       "name": "Download Final Video",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [2400, 40]
+      "position": [2480, 1360]
     },
     {
       "parameters": {
@@ -344,7 +470,7 @@
       "name": "Upload to Google Drive",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [2600, 40]
+      "position": [2700, 1360]
     },
     {
       "parameters": {
@@ -358,7 +484,7 @@
       "name": "Build Drive Response",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.3,
-      "position": [2800, 40]
+      "position": [2920, 1360]
     },
     {
       "parameters": {
@@ -374,7 +500,7 @@
       "name": "From Webhook?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [3000, 140]
+      "position": [3140, 1460]
     },
     {
       "parameters": {"responseBody": "={{ $json.response ?? $json }}", "responseCode": 200},
@@ -382,7 +508,7 @@
       "name": "Respond to Webhook",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [3200, 40]
+      "position": [3360, 1360]
     },
     {
       "parameters": {
@@ -396,7 +522,7 @@
       "name": "Manual Test Complete",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.3,
-      "position": [3200, 240]
+      "position": [3360, 1560]
     }
   ],
   "connections": {
