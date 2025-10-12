@@ -1,0 +1,440 @@
+{
+  "name": "UGC – Screenshot→Gemini→Sora2→VBR (Vertical)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ugc-screenshot-video",
+        "responseMode": "responseNode",
+        "options": {"responseData": "allEntries"}
+      },
+      "id": "webhook",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [-1520, 40]
+    },
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-1520, 280]
+    },
+    {
+      "parameters": {
+        "height": 340,
+        "width": 460,
+        "content": "## 🎯 Sora Prompt Structure\n\n**Template:**\n[ICP/visual details] filming a UGC ad about [APP CONTEXT].\nThey start by saying: [hook],\nthen explain: [problem],\npresent the solution: [solution],\nand end with: [CTA].\n[Emotional journey]. [Camera style].\nNatural hand gestures and expressions.\n\n**Key Elements:**\n- `ad_topic`: What app/feature is being promoted\n- `visual_details`: Actor description + setting\n- `ad_structure`: Hook, problem, solution, CTA\n- `emotional_journey`: How emotions progress\n- Camera style extracted from visual_details\n\n✅ This structure makes Sora understand CONTEXT vs WHAT TO GENERATE"
+      },
+      "id": "sticky-sora-structure",
+      "name": "📝 Sora Prompt Structure",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [60, -120]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {"name": "screenshot_video_url", "type": "string", "value": "={{ $json.body?.screenshot_video_url ?? $json.screenshot_video_url }}"},
+            {"name": "meta", "type": "object", "value": "={{ $json.body?.meta ?? $json.meta ?? {} }}"},
+            {"name": "store_to_drive", "type": "boolean", "value": "={{ $json.body?.store_to_drive ?? $json.store_to_drive ?? false }}"},
+            {"name": "reference_image_url", "type": "string", "value": "={{ $json.body?.reference_image_url ?? $json.reference_image_url ?? '' }}"},
+            {"name": "source", "type": "string", "value": "webhook"}
+          ]
+        }
+      },
+      "id": "extract-webhook",
+      "name": "Extract Webhook Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [-1300, 40]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {"name": "screenshot_video_url", "type": "string", "value": "https://videos.videobgremover.com/public-videos/assets/screenrecord_video_affina.mp4"},
+            {"name": "meta", "type": "object", "value": "={{ {product_name: 'Sample App', benefits: ['Easy to use', 'Fast', 'Powerful'], tone: 'friendly'} }}"},
+            {"name": "store_to_drive", "type": "boolean", "value": true},
+            {"name": "reference_image_url", "type": "string", "value": ""},
+            {"name": "source", "type": "string", "value": "manual"}
+          ]
+        }
+      },
+      "id": "sample-input",
+      "name": "Sample Input (Edit Here)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [-1300, 280]
+    },
+    {
+      "parameters": {
+        "mode": "append",
+        "options": {}
+      },
+      "id": "merge-triggers",
+      "name": "Merge Triggers",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [-1080, 160]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.screenshot_video_url }}",
+        "options": {}
+      },
+      "id": "download-shot",
+      "name": "Download Screenshot Video",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-860, 160]
+    },
+    {
+      "parameters": {
+        "url": "=https://generativelanguage.googleapis.com/upload/v1beta/files?key={{ $vars.GEMINI_KEY }}",
+        "method": "POST",
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "=data",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [
+          {"name":"X-Goog-Upload-Command","value":"start, upload, finalize"},
+          {"name":"X-Goog-Upload-Header-Content-Length","value":"={{ $binary.data.fileSize }}"},
+          {"name":"X-Goog-Upload-Header-Content-Type","value":"=video/{{ $binary.data.fileExtension }}"},
+          {"name":"Content-Type","value":"video/mp4"}
+        ]},
+        "options": {}
+      },
+      "id": "gemini-upload",
+      "name": "Upload to Gemini",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-640, 160]
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "id": "wait-gemini",
+      "name": "Wait for Processing",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [-420, 160]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key={{ $vars.GEMINI_KEY }}",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [{"name":"Content-Type","value":"application/json"}]},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"contents\": [{\n    \"role\": \"user\",\n    \"parts\": [\n      {\n        \"fileData\": {\n          \"fileUri\": \"{{ $('Upload to Gemini').item.json.file.uri }}\",\n          \"mimeType\": \"{{ $('Upload to Gemini').item.json.file.mimeType }}\"\n        }\n      },\n      {\n        \"text\": \"You are a UGC ad planner. Analyze this vertical app-screen recording (<=12s) and create a facecam UGC ad structure.\\n\\nObserve the recording and infer: who uses this, what they want, where frustration occurs, why it matters.\\n\\nReturn strict JSON:\\n{\\n  ad_topic: \\\"Short description of what app/feature is being promoted (e.g. 'Hinge unlimited likes upgrade')\\\",\\n  icp_summary: \\\"One sentence describing the target user and their core frustration\\\",\\n  ad_structure: {\\n    hook_0_2s: \\\"Opening line that stops scroll (5-8 words max)\\\",\\n    problem_2_6s: \\\"One brief sentence about the problem (12-15 words max)\\\",\\n    solution_6_10s: \\\"Present the fix with product name and benefit (12-15 words max)\\\",\\n    cta_10_12s: \\\"Clear call-to-action (5-8 words max)\\\"\\n  },\\n  visual_details: \\\"Describe actor (age, gender, wardrobe), setting (location, lighting, background), and camera style (framing, movement)\\\",\\n  emotional_journey: \\\"Brief description of how emotions change: starting state (0-2s), middle escalation (2-6s), resolution (6-12s)\\\",\\n  duration: 4 or 8 or 12\\n}\\n\\nUse meta if provided: product_name, benefits[], tone.\\nDo NOT add extra fields. Keep all fields concise.\"\n      }\n    ]\n  }],\n  \"generationConfig\": {\n    \"temperature\": 0.7,\n    \"topK\": 40,\n    \"topP\": 0.95,\n    \"maxOutputTokens\": 8192\n  }\n}"
+      },
+      "id": "gemini-analyze",
+      "name": "Gemini – Analyze & Plan",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-180, 160]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract raw text from Gemini response\nconst rawText = $input.item.json.candidates[0].content.parts[0].text;\n\n// Remove markdown code blocks\nconst cleanJson = rawText.replace(/```json\\n?/g, '').replace(/\\n?```/g, '').trim();\n\n// Parse the JSON\nconst data = JSON.parse(cleanJson);\n\n// Return the structured data\nreturn {\n  json: {\n    ad_topic: data.ad_topic,\n    icp_summary: data.icp_summary,\n    ad_structure: data.ad_structure,\n    visual_details: data.visual_details,\n    emotional_journey: data.emotional_journey,\n    duration: data.duration || 8\n  }\n};"
+      },
+      "id": "extract-plan",
+      "name": "Extract & Parse",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [40, 160]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build Sora prompt following the structure:\n// [ICP/visual] filming a UGC ad about [APP CONTEXT]. They start by saying [hook], then explain [problem], present the solution: [solution], and end with [CTA]. [Emotional journey]. [Camera style]. Natural hand gestures and expressions.\n\nconst visual = $input.item.json.visual_details;\nconst emotions = $input.item.json.emotional_journey;\nconst ad = $input.item.json.ad_structure;\nconst topic = $input.item.json.ad_topic;\n\n// Extract camera style from visual_details (usually at the end)\nconst cameraStyle = visual.includes('camera') ? visual.split('.').find(s => s.toLowerCase().includes('camera'))?.trim() || 'Handheld selfie-style close-up' : 'Handheld selfie-style close-up';\n\n// Build the person description (without camera details)\nconst personDescription = visual.split('.').filter(s => !s.toLowerCase().includes('camera')).join('.').trim();\n\nconst soraPrompt = `${personDescription} filming a UGC ad about ${topic}. They start by saying: ${ad.hook_0_2s}. Then explain: ${ad.problem_2_6s}. Present the solution: ${ad.solution_6_10s}. And end with: ${ad.cta_10_12s}. ${emotions}. ${cameraStyle}. Natural hand gestures and authentic expressions throughout. Raw selfie video of ONLY the person talking - no text overlays, no app UI, no graphics, no split-screen. Just the speaker.`;\n\nreturn {\n  json: {\n    sora_prompt: soraPrompt,\n    duration: $input.item.json.duration\n  }\n};"
+      },
+      "id": "build-sora-prompt",
+      "name": "Build Sora Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [260, 160]
+    },
+    {
+      "parameters": {
+        "url": "https://queue.fal.run/fal-ai/sora-2/text-to-video",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [
+          {"name":"Authorization","value":"=Key {{ $vars.FAL_KEY }}"},
+          {"name":"Content-Type","value":"application/json"}
+        ]},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"prompt\": \"{{ $json.sora_prompt }}\",\n  \"aspect_ratio\": \"9:16\",\n  \"resolution\": \"720p\",\n  \"duration\": {{ $json.duration }}\n}"
+      },
+      "id": "sora-submit",
+      "name": "Sora 2 – Submit (fal.ai)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 160]
+    },
+    {
+      "parameters": {
+        "url": "=https://queue.fal.run/fal-ai/sora-2/requests/{{ $json.request_id }}/status",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [{"name":"Authorization","value":"=Key {{ $vars.FAL_KEY }}"}]},
+        "options": {"response": {"response": {"responseFormat":"json","neverError": true}}}
+      },
+      "id": "sora-status",
+      "name": "Sora – Check Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [700, 160]
+    },
+    {
+      "parameters": {"amount": 20, "unit": "seconds"},
+      "id": "wait-20",
+      "name": "Wait 20s",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [920, 260]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {"leftValue": "={{ $json.status }}","operator": {"type":"string","operation":"equals"},"rightValue":"COMPLETED","id":"ok"}
+          ],
+          "options": {"typeValidation":"strict","caseSensitive":true}
+        }
+      },
+      "id": "if-sora-done",
+      "name": "Sora Completed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [920, 160]
+    },
+    {
+      "parameters": {
+        "url": "=https://queue.fal.run/fal-ai/sora-2/requests/{{ $('Sora 2 – Submit (fal.ai)').item.json.request_id }}",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [{"name":"Authorization","value":"=Key {{ $vars.FAL_KEY }}"}]}
+      },
+      "id": "sora-result",
+      "name": "Sora – Get Result",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1140, 160]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.videobgremover.com/api/v1/jobs",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [
+          {"name": "X-API-Key", "value": "={{ $vars.VIDEOBGREMOVER_KEY }}"},
+          {"name": "Content-Type", "value": "application/json"}
+        ]},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \n  \"video_url\": \"{{ $json.video.url }}\" \n}"
+      },
+      "id": "vbr-create",
+      "name": "VBR – Create Job (Foreground=Sora)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1360, 160]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.videobgremover.com/api/v1/jobs/{{ $json.id }}/start",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [
+          {"name": "X-API-Key", "value": "={{ $vars.VIDEOBGREMOVER_KEY }}"},
+          {"name": "Content-Type", "value": "application/json"}
+        ]},
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"background\": {\n    \"type\": \"composition\",\n    \"composition\": {\n      \"template\": \"ai_ugc_ad\",\n      \"background_type\": \"video\",\n      \"background_url\": \"{{ $('Merge Triggers').item.json.screenshot_video_url }}\",\n      \"background_audio_enabled\": true,\n      \"background_audio_volume\": 0.3,\n      \"export_format\": \"h264\",\n      \"export_preset\": \"medium\"\n    }\n  }\n}"
+      },
+      "id": "vbr-start",
+      "name": "VBR – Start Composition",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1580, 160]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.videobgremover.com/api/v1/jobs/{{ $('VBR – Create Job (Foreground=Sora)').item.json.id }}/status",
+        "sendHeaders": true,
+        "headerParameters": {"parameters": [{"name": "X-API-Key", "value": "={{ $vars.VIDEOBGREMOVER_KEY }}"}]},
+        "options": {"response": {"response": {"responseFormat": "json", "neverError": true}}}
+      },
+      "id": "vbr-status",
+      "name": "VBR – Check Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1800, 160]
+    },
+    {
+      "parameters": {"amount": 20, "unit": "seconds"},
+      "id": "wait-20b",
+      "name": "Wait 20s (VBR)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2000, 260]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {"leftValue": "={{ $json.status }}","operator": {"type":"string","operation":"equals"},"rightValue":"completed","id":"done"}
+          ],
+          "options": {"typeValidation":"strict","caseSensitive":true}
+        }
+      },
+      "id": "if-vbr-done",
+      "name": "VBR Completed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [2000, 160]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {"name":"final_url","type":"string","value":"={{ $json.processed_video_url }}"},
+            {"name":"length_seconds","type":"number","value":"={{ $json.length_seconds ?? $json.meta?.duration }}"}
+          ]
+        }
+      },
+      "id": "prepare-final",
+      "name": "Prepare Final URL",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [2200, 160]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Prepare Final URL').item.json.final_url }}",
+        "options": {"response": {"response": {"responseFormat": "file"}}}
+      },
+      "id": "download-final",
+      "name": "Download Final Video",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2400, 40]
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "binaryPropertyName": "data",
+        "name": "=ugc_final_{{ new Date().getTime() }}.mp4",
+        "driveId": {"__rl": true, "mode": "list", "value": "My Drive"},
+        "folderId": {"__rl": true, "mode": "list", "value": "root"},
+        "options": {"simplifyOutput": true}
+      },
+      "id": "gdrive-upload",
+      "name": "Upload to Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [2600, 40]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {"name":"response","type":"object","value":"={{ { url: $json.webViewLink, drive_file_id: $json.id, source: 'google_drive' } }}"}
+          ]
+        }
+      },
+      "id": "build-drive-resp",
+      "name": "Build Drive Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [2800, 40]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {"leftValue":"={{ $('Merge Triggers').item.json.source }}","operator":{"type":"string","operation":"equals"},"rightValue":"webhook","id":"is-webhook"}
+          ],
+          "options": {"typeValidation":"strict","caseSensitive":true}
+        }
+      },
+      "id": "if-webhook",
+      "name": "From Webhook?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [3000, 140]
+    },
+    {
+      "parameters": {"responseBody": "={{ $json.response ?? $json }}", "responseCode": 200},
+      "id": "respond",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [3200, 40]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {"name":"final_result","type":"object","value":"={{ $json.response ?? $json }}"}
+          ]
+        }
+      },
+      "id": "manual-complete",
+      "name": "Manual Test Complete",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [3200, 240]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {"main": [[{"node":"Extract Webhook Data","type":"main","index":0}]]},
+    "Manual Trigger": {"main": [[{"node":"Sample Input (Edit Here)","type":"main","index":0}]]},
+    "Extract Webhook Data": {"main": [[{"node":"Merge Triggers","type":"main","index":0}]]},
+    "Sample Input (Edit Here)": {"main": [[{"node":"Merge Triggers","type":"main","index":1}]]},
+    "Merge Triggers": {"main": [[{"node":"Download Screenshot Video","type":"main","index":0}]]},
+    "Download Screenshot Video": {"main": [[{"node":"Upload to Gemini","type":"main","index":0}]]},
+    "Upload to Gemini": {"main": [[{"node":"Wait for Processing","type":"main","index":0}]]},
+    "Wait for Processing": {"main": [[{"node":"Gemini – Analyze & Plan","type":"main","index":0}]]},
+    "Gemini – Analyze & Plan": {"main": [[{"node":"Extract & Parse","type":"main","index":0}]]},
+    "Extract & Parse": {"main": [[{"node":"Build Sora Prompt","type":"main","index":0}]]},
+    "Build Sora Prompt": {"main": [[{"node":"Sora 2 – Submit (fal.ai)","type":"main","index":0}]]},
+    "Sora 2 – Submit (fal.ai)": {"main": [[{"node":"Sora – Check Status","type":"main","index":0}]]},
+    "Sora – Check Status": {"main": [[{"node":"Sora Completed?","type":"main","index":0}]]},
+    "Sora Completed?": {"main": [
+      [{"node":"Sora – Get Result","type":"main","index":0}],
+      [{"node":"Wait 20s","type":"main","index":0}]
+    ]},
+    "Wait 20s": {"main": [[{"node":"Sora – Check Status","type":"main","index":0}]]},
+    "Sora – Get Result": {"main": [[{"node":"VBR – Create Job (Foreground=Sora)","type":"main","index":0}]]},
+    "VBR – Create Job (Foreground=Sora)": {"main": [[{"node":"VBR – Start Composition","type":"main","index":0}]]},
+    "VBR – Start Composition": {"main": [[{"node":"VBR – Check Status","type":"main","index":0}]]},
+    "VBR – Check Status": {"main": [[{"node":"VBR Completed?","type":"main","index":0}]]},
+    "VBR Completed?": {"main": [
+      [{"node":"Prepare Final URL","type":"main","index":0}],
+      [{"node":"Wait 20s (VBR)","type":"main","index":0}]
+    ]},
+    "Wait 20s (VBR)": {"main": [[{"node":"VBR – Check Status","type":"main","index":0}]]},
+    "Prepare Final URL": {"main": [[{"node":"Download Final Video","type":"main","index":0}]]},
+    "Download Final Video": {"main": [[{"node":"Upload to Google Drive","type":"main","index":0}]]},
+    "Upload to Google Drive": {"main": [[{"node":"Build Drive Response","type":"main","index":0}]]},
+    "Build Drive Response": {"main": [[{"node":"From Webhook?","type":"main","index":0}]]},
+    "From Webhook?": {"main": [
+      [{"node":"Respond to Webhook","type":"main","index":0}],
+      [{"node":"Manual Test Complete","type":"main","index":0}]
+    ]}
+  },
+  "settings": {"executionOrder": "v1"}
+}
