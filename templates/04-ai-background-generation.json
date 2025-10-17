@@ -328,13 +328,7 @@
       "position": [
         -1840,
         352
-      ],
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "WNCeNTEJG10bAANs",
-          "name": "Google Drive account"
-        }
-      }
+      ]
     },
     {
       "parameters": {
@@ -355,13 +349,7 @@
       "position": [
         -1600,
         352
-      ],
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "WNCeNTEJG10bAANs",
-          "name": "Google Drive account"
-        }
-      }
+      ]
     },
     {
       "parameters": {
@@ -593,13 +581,7 @@
       "position": [
         -160,
         752
-      ],
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "WNCeNTEJG10bAANs",
-          "name": "Google Drive account"
-        }
-      }
+      ]
     },
     {
       "parameters": {
@@ -682,8 +664,7 @@
       "position": [
         -400,
         992
-      ],
-      "webhookId": "dbd4f485-2f02-46e5-b5bb-50f0016b8a6d"
+      ]
     },
     {
       "parameters": {
@@ -1022,12 +1003,5 @@
   "active": false,
   "settings": {
     "executionOrder": "v1"
-  },
-  "versionId": "5b2354b2-89d4-43da-ba48-fdf6562e7847",
-  "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "7244ca82a4b2f379fac309a463933ecccda0c713846dd03689e68828daaf35c3"
-  },
-  "id": "XKdEoPbi9pUTrW7L",
-  "tags": []
+  }
 }

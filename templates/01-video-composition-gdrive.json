@@ -5,7 +5,7 @@
       "parameters": {
         "height": 580,
         "width": 520,
-        "content": "## 🎬 Video Background Removal & Composition\n\n**What it does:**\n- Removes background from ANY video (AI actors, product demos, webcam footage, etc.)\n- Composites foreground onto custom background video\n- Mixes audio from both videos\n- Saves final result to Google Drive\n\n**Perfect for:**\n- AI UGC ad creators (HeyGen, Synthesia, D-ID)\n- E-commerce product videos with branded backgrounds\n- Social media content with custom scenes\n- Webcam/talking head videos on professional backgrounds\n- Sports training videos with clean backgrounds\n\n**Processing time:** 3-5 minutes per minute of video\n\n**Setup:** ~7 minutes total\n\n[📖 Full Documentation](https://docs.videobgremover.com/)"
+        "content": "## 🎬 Video Background Removal & Composition\n\n**What it does:**\n- Removes background from ANY video (AI actors, product demos, webcam footage, etc.)\n- Composites foreground onto custom background video\n- Mixes audio from both videos\n- Saves final result to Google Drive\n\n**Perfect for:**\n- AI UGC ad creators \n- E-commerce product videos with branded backgrounds\n- Social media content with custom scenes\n- Webcam/talking head videos on professional backgrounds\n- Sports training videos with clean backgrounds\n\n**Processing time:** 3-5 minutes per minute of video\n\n**Setup:** ~7 minutes total\n\n[📖 Full Documentation](https://docs.videobgremover.com/)"
       },
       "id": "sticky-overview",
       "name": "📋 Overview",
@@ -31,7 +31,7 @@
       "parameters": {
         "height": 280,
         "width": 380,
-        "content": "## 📥 Input Videos Required\n\n**Foreground video:** Subject with any background\n- AI actors (HeyGen, Synthesia, D-ID)\n- Product demonstrations\n- Webcam/talking head footage\n- Sports/training content\n\n**Background video:** Your custom scene\n- Brand environments\n- Stock footage\n- Custom locations\n- Animated backgrounds\n\n⚠️ Both must be **publicly accessible URLs**"
+        "content": "## 📥 Input Videos Required\n\n**Foreground video:** Subject with any background\n- AI actors \n- Product demonstrations\n- Webcam/talking head footage\n- Sports/training content\n\n**Background video:** Your custom scene\n- Brand environments\n- Stock footage\n- Custom locations\n- Animated backgrounds\n\n⚠️ Both must be **publicly accessible URLs**"
       },
       "id": "sticky-inputs",
       "name": "📥 Inputs",

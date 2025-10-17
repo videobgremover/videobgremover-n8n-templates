@@ -31,7 +31,7 @@
       "parameters": {
         "height": 280,
         "width": 380,
-        "content": "## 📥 Input Required\n\n**Foreground video:** Subject with any background\n- AI actors (HeyGen, Synthesia, D-ID)\n- Product demonstrations\n- Webcam/talking head footage\n- Profile videos\n- Sports/training content\n\n**Background image:** Your custom scene\n- Brand backgrounds (logos, colors)\n- Professional settings (office, studio)\n- Product photos\n- Custom graphics/designs\n\n⚠️ Both must be **publicly accessible URLs**"
+        "content": "## 📥 Input Required\n\n**Foreground video:** Subject with any background\n- AI actors \n- Product demonstrations\n- Webcam/talking head footage\n- Profile videos\n- Sports/training content\n\n**Background image:** Your custom scene\n- Brand backgrounds (logos, colors)\n- Professional settings (office, studio)\n- Product photos\n- Custom graphics/designs\n\n⚠️ Both must be **publicly accessible URLs**"
       },
       "id": "sticky-inputs",
       "name": "📥 Inputs",
