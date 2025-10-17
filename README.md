@@ -39,6 +39,47 @@ AI-powered UGC ad generator: App screen recording → Gemini analysis → Sora 2
 
 ---
 
+### 03-image-composition-gdrive.json
+Remove video background, composite on static image background, save to Google Drive.
+
+**Features:**
+- Background removal from any video
+- Image composition with centered template
+- Static image backgrounds (JPG, PNG, WebP)
+- Google Drive upload
+- Status polling with retry logic
+
+**Perfect for:**
+- Profile/presentation videos with professional backgrounds
+- AI avatars (HeyGen, D-ID) on static scenes
+- Social media content with custom branded backgrounds
+- Product demos with consistent brand imagery
+
+**Setup:** ~7 min | **Processing:** 3-5 min per min of video
+
+---
+
+### 04-ai-background-generation.json
+Generate custom backgrounds with AI from text prompts, remove video background, composite, and save to Google Drive.
+
+**Features:**
+- AI background generation from text (Gemini Nano Banana)
+- Automatic background removal from video
+- Image composition with centered template
+- Multiple aspect ratio support (1:1, 16:9, 9:16, 4:3, 21:9)
+- Google Drive upload (image + video)
+- Status polling with retry logic
+
+**Perfect for:**
+- Custom scenes from imagination (no stock images needed)
+- Marketing videos with tailored AI-generated environments
+- Product demos with unique, brand-specific backgrounds
+- Social media content with creative AI-generated visuals
+
+**Setup:** ~5 min (2 API keys) | **Processing:** 2-4 min per video
+
+---
+
 ## 🚀 Quick Start
 
 ### Template 01: Video Composition
@@ -62,6 +103,26 @@ AI-powered UGC ad generator: App screen recording → Gemini analysis → Sora 2
 5. Connect Google Drive
 6. Test with sample screen recording
 
+### Template 03: Image Composition
+
+1. In n8n, go to **Workflows → Import from URL**
+2. Paste: `https://raw.githubusercontent.com/videobgremover/videobgremover-n8n-templates/main/templates/03-image-composition-gdrive.json`
+3. Click **Import**
+4. Add API key: **Settings → Variables → `VIDEOBGREMOVER_KEY`**
+5. Connect Google Drive
+6. Test with sample video + image
+
+### Template 04: AI Background Generation
+
+1. In n8n, go to **Workflows → Import from URL**
+2. Paste: `https://raw.githubusercontent.com/videobgremover/videobgremover-n8n-templates/main/templates/04-ai-background-generation.json`
+3. Click **Import**
+4. Add API keys: **Settings → Variables**
+   - `GEMINI_KEY` → Get from https://aistudio.google.com/apikey
+   - `VIDEOBGREMOVER_KEY` → Get from https://videobgremover.com/api-management
+5. Connect Google Drive
+6. Test with sample video + text prompt
+
 Get your VideoBGRemover API key: https://videobgremover.com/api-management
 
 ---
@@ -70,11 +131,14 @@ Get your VideoBGRemover API key: https://videobgremover.com/api-management
 
 Use these for testing:
 
-**Foreground (AI actor):**  
+**Foreground (AI actor):**
 `https://videos.videobgremover.com/public-videos/assets/ai-actor.mp4`
 
-**Background (vertical scene):**  
+**Background (vertical scene - video):**
 `https://videos.videobgremover.com/public-videos/assets/vertical_background.mp4`
+
+**Background (image):**
+`https://drive.google.com/uc?id=1DYJxUcuN5n4BT4YZnRKYmXuLNSCs5bPy`
 
 ---
 
