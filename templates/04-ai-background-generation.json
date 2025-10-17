@@ -243,7 +243,9 @@
       ]
     },
     {
-      "parameters": {},
+      "parameters": {
+        "mode": "append"
+      },
       "id": "65c2e215-a254-4514-a5bd-c36bd6d344ca",
       "name": "Merge Triggers",
       "type": "n8n-nodes-base.merge",
