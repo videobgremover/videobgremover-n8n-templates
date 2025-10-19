@@ -80,6 +80,33 @@ Generate custom backgrounds with AI from text prompts, remove video background, 
 
 ---
 
+### 05-change-video-background-ai.json
+AI-powered background change using Wan 2.2 VACE: Remove background → AI generates new background from text prompt.
+
+**Features:**
+- Background removal with VideoBGRemover (extracts mask)
+- AI background generation with FAL Wan 2.2 VACE inpainting
+- Text-prompt based background creation
+- Temporal consistency across frames
+- Seamless video inpainting
+- Google Drive upload
+
+**Perfect for:**
+- Creative video transformations without stock footage
+- Product demos with imaginative AI-generated backgrounds
+- Social media content with unique, custom scenes
+- Background replacement with full creative control
+
+**Example prompts:**
+- "A futuristic cyberpunk city at night"
+- "A peaceful beach at sunset"
+- "Inside a modern minimalist studio"
+- "A magical forest with glowing trees"
+
+**Setup:** ~10 min (2 API keys) | **Processing:** 7-10 min total
+
+---
+
 ## 🚀 Quick Start
 
 ### Template 01: Video Composition
@@ -122,6 +149,17 @@ Generate custom backgrounds with AI from text prompts, remove video background, 
    - `VIDEOBGREMOVER_KEY` → Get from https://videobgremover.com/api-management
 5. Connect Google Drive
 6. Test with sample video + text prompt
+
+### Template 05: AI Background Change (VACE Inpainting)
+
+1. In n8n, go to **Workflows → Import from URL**
+2. Paste: `https://raw.githubusercontent.com/videobgremover/videobgremover-n8n-templates/main/templates/05-change-video-background-ai.json`
+3. Click **Import**
+4. Add API keys: **Settings → Variables**
+   - `VIDEOBGREMOVER_KEY` → Get from https://videobgremover.com/api-management
+   - `FAL_KEY` → Get from https://fal.ai/dashboard/keys
+5. Connect Google Drive
+6. Test with sample video + background prompt
 
 Get your VideoBGRemover API key: https://videobgremover.com/api-management
 

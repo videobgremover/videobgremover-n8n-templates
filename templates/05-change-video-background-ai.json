@@ -1,0 +1,508 @@
+{
+  "name": "AI Background Change – VideoBGRemover + Wan2.2 Vace (fal)",
+  "nodes": [
+    {
+      "parameters": {
+        "height": 600,
+        "width": 520,
+        "content": "## 🎨 AI Background Change\n\n**What it does:**\n- Removes background from video using VideoBGRemover\n- Uses AI to generate new background based on your prompt\n- Wan 2.2 VACE model creates seamless background\n- Saves final result to Google Drive\n\n**Perfect for:**\n- Changing video backgrounds with AI creativity\n- Product demos in custom AI-generated environments\n- Social media content with imaginative scenes\n- Creative video transformations\n\n**Example prompts:**\n- \"A futuristic cyberpunk city at night\"\n- \"A peaceful beach at sunset\"\n- \"Inside a modern minimalist studio\"\n- \"A magical forest with glowing trees\"\n\n**Processing time:** 7-10 minutes total\n\n**Setup:** ~10 minutes (2 API keys)\n\n[📖 Full Documentation](https://docs.videobgremover.com/)"
+      },
+      "id": "sticky-overview",
+      "name": "📋 Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1980, -320],
+      "notesTextSize": "large",
+      "notesBackgroundColor": 4
+    },
+    {
+      "parameters": {
+        "height": 520,
+        "width": 420,
+        "content": "## 🔑 API Keys Setup (Required)\n\n**1. VideoBGRemover API Key**\n- Visit: https://videobgremover.com/api-management\n- Sign up (free tier available)\n- Copy your API key\n- Add to n8n: Settings → Variables\n  - Name: `VIDEOBGREMOVER_KEY`\n  - Value: your API key\n\n**2. FAL AI Key**\n- Visit: https://fal.ai/dashboard/keys\n- Sign up and create API key\n- Add to n8n: Settings → Variables\n  - Name: `FAL_KEY`\n  - Value: your FAL key\n\n**Pricing:**\n- VideoBGRemover: $0.50-$2.00 per min\n- FAL.ai VACE: ~$0.10-$0.30 per video\n\n✅ Both keys use `$vars.` (secure)"
+      },
+      "id": "sticky-api-keys",
+      "name": "🔑 API Keys",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1520, -320]
+    },
+    {
+      "parameters": {
+        "height": 420,
+        "width": 420,
+        "content": "## 📥 Input Required\n\n**video_url** (required)\n- URL to your source video\n- Any subject with background\n- Supported formats: MP4, MOV, WebM\n- Max size: 1GB\n- Must be publicly accessible\n\n**prompt** (required)\n- Description of the new background\n- Be specific and creative\n- Examples:\n  - \"A cozy coffee shop interior\"\n  - \"Outer space with stars and nebula\"\n  - \"A modern office with plants\"\n  - \"A sunset beach with palm trees\"\n\n**Example:**\n```json\n{\n  \"video_url\": \"https://example.com/video.mp4\",\n  \"prompt\": \"A futuristic city skyline at night\",\n  \"store_to_drive\": true\n}\n```"
+      },
+      "id": "sticky-inputs",
+      "name": "📥 Inputs",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1060, -320]
+    },
+    {
+      "parameters": {
+        "height": 540,
+        "width": 420,
+        "content": "## 🔄 Workflow Steps\n\n**1. VideoBGRemover** (~3-5 min)\n- Uploads your video\n- AI removes background\n- Generates foreground mask video\n- Mask shows what was removed\n\n**2. FAL.ai VACE Inpainting** (~4-5 min)\n- Takes original video + mask\n- Uses AI to generate new background\n- Inpaints based on your prompt\n- Creates seamless composition\n\n**3. Google Drive Upload**\n- Downloads final video\n- Uploads to your Drive\n- Returns shareable link\n\n**Key difference from composition:**\nThis uses AI to GENERATE the background based on your prompt, rather than compositing onto an existing image/video.\n\n**Total time:** 7-10 minutes per video"
+      },
+      "id": "sticky-workflow",
+      "name": "🔄 Workflow",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-600, -320]
+    },
+    {
+      "parameters": {
+        "height": 380,
+        "width": 420,
+        "content": "## 🎯 How VACE Inpainting Works\n\n**Input:**\n- `video_url`: Your original video\n- `mask_video_url`: Mask from VBR (shows removed areas)\n- `prompt`: Description of new background\n\n**Process:**\n- AI analyzes the masked regions\n- Generates new content based on prompt\n- Maintains temporal consistency\n- Blends seamlessly with foreground\n\n**Advanced options:**\n- Resolution: 240p to 720p\n- Aspect ratio: auto-detect or custom\n- Guidance scale: control prompt adherence\n- Num frames: match input or custom\n\n**Tips for best results:**\n- Clear, descriptive prompts\n- Videos with clean subject edges\n- 4-12 second clips work best"
+      },
+      "id": "sticky-vace",
+      "name": "🎨 VACE Model",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-120, -320]
+    },
+    {
+      "parameters": {
+        "height": 340,
+        "width": 380,
+        "content": "## 💾 Google Drive Setup\n\n**Step 1:** Connect Google Drive\n- Click \"Upload to Google Drive\" node\n- Click \"Connect\"\n- Authorize n8n\n\n**Step 2:** Choose folder (optional)\n- Default: Root of \"My Drive\"\n- Or select specific folder\n\n**Output:**\n- Permanent shareable link\n- Direct download URL\n- File metadata\n- Drive file ID\n\n⏱️ Setup time: ~2 minutes\n\n**Note:** Files are named automatically:\n`ai_background_change_[timestamp].mp4`"
+      },
+      "id": "sticky-gdrive",
+      "name": "💾 Google Drive",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [360, -320]
+    },
+    {
+      "parameters": {
+        "height": 480,
+        "width": 420,
+        "content": "## 🚀 How to Use\n\n**Manual testing:**\n1. Update `video_url` and `prompt` in \"Sample Input\"\n2. Click \"Execute Workflow\"\n3. Wait 7-10 minutes for processing\n4. Check Google Drive for final video\n\n**Webhook automation:**\n1. Activate workflow\n2. Copy webhook URL\n3. POST to webhook:\n```json\n{\n  \"video_url\": \"https://...\",\n  \"prompt\": \"A beautiful sunset beach\",\n  \"store_to_drive\": true\n}\n```\n\n**Tips:**\n- Start with short videos (5-10s)\n- Use descriptive, specific prompts\n- Test different guidance scales\n- Monitor processing time\n- Check FAL.ai credits balance"
+      },
+      "id": "sticky-usage",
+      "name": "🚀 Usage",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [820, -320]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ai-background-change",
+        "responseMode": "responseNode",
+        "options": {"responseData": "allEntries"}
+      },
+      "id": "webhook",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [-1520, 40]
+    },
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-1520, 280]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {"name": "video_url", "type": "string", "value": "={{ $json.body?.video_url ?? $json.video_url }}"},
+            {"name": "prompt", "type": "string", "value": "={{ $json.body?.prompt ?? $json.prompt }}"},
+            {"name": "ref_image_url", "type": "string", "value": "={{ $json.body?.ref_image_url ?? $json.ref_image_url ?? '' }}"},
+            {"name": "store_to_drive", "type": "boolean", "value": "={{ $json.body?.store_to_drive ?? $json.store_to_drive ?? true }}"},
+            {"name": "source", "type": "string", "value": "webhook"}
+          ]
+        }
+      },
+      "id": "extract-webhook",
+      "name": "Extract Webhook Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [-1300, 40]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {"name": "video_url", "type": "string", "value": "https://videos.videobgremover.com/public-assets/template-05-assets/video_sneakers.mp4"},
+            {"name": "prompt", "type": "string", "value": "A pair of sneakers resting on fresh white snow in an outdoor winter scene. The sneakers are clearly visible in the foreground on the snowy ground. Snow-covered landscape in the background with evergreen trees, soft natural lighting from overcast winter sky. Peaceful winter atmosphere with gentle shadows on the pristine white snow and subtle snowflakes in the air."},
+            {"name": "ref_image_url", "type": "string", "value": "https://storage.googleapis.com/videobgremover-public/public-assets/template-05-assets/background_snow.jpg"},
+            {"name": "store_to_drive", "type": "boolean", "value": true},
+            {"name": "source", "type": "string", "value": "manual"}
+          ]
+        }
+      },
+      "id": "sample-input",
+      "name": "Sample Input (Edit Here)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [-1300, 280]
+    },
+    {
+      "parameters": {
+        "mode": "append",
+        "options": {}
+      },
+      "id": "merge-triggers",
+      "name": "Merge Triggers",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [-1080, 160]
+    },
+    {
+      "parameters": {
+        "height": 100,
+        "width": 1100,
+        "content": "## 🎬 VIDEOBGREMOVER SECTION\nRemove background → Extract mask video for inpainting"
+      },
+      "id": "sticky-section-vbr",
+      "name": "Section: VideoBGRemover",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-900, 380],
+      "notesBackgroundColor": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.videobgremover.com/api/v1/jobs",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "X-API-Key", "value": "={{ $vars.VIDEOBGREMOVER_KEY }}"},
+            {"name": "Content-Type", "value": "application/json"}
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={ \"video_url\": \"{{ $json.video_url }}\" }",
+        "options": {}
+      },
+      "id": "vbr-create",
+      "name": "VBR – Create Job",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-860, 460]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.videobgremover.com/api/v1/jobs/{{ $json.id }}/start",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "X-API-Key", "value": "={{ $vars.VIDEOBGREMOVER_KEY }}"},
+            {"name": "Content-Type", "value": "application/json"}
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"background\": {\n    \"type\": \"transparent\",\n    \"transparent_format\": \"mask_video_inverted\"\n  }\n}",
+        "options": {}
+      },
+      "id": "vbr-start",
+      "name": "VBR – Start Processing",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-640, 460]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.videobgremover.com/api/v1/jobs/{{ $('VBR – Create Job').item.json.id }}/status",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "X-API-Key", "value": "={{ $vars.VIDEOBGREMOVER_KEY }}"}
+          ]
+        },
+        "options": {
+          "response": {"response": {"responseFormat": "json", "neverError": true}}
+        }
+      },
+      "id": "vbr-status",
+      "name": "VBR – Check Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-420, 460]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {"leftValue": "={{ $json.status }}", "operator": {"type": "string", "operation": "equals"}, "rightValue": "completed", "id": "done"}
+          ],
+          "options": {"typeValidation": "strict", "caseSensitive": true}
+        }
+      },
+      "id": "if-vbr-done",
+      "name": "VBR Completed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [-180, 460]
+    },
+    {
+      "parameters": {
+        "amount": 20,
+        "unit": "seconds"
+      },
+      "id": "wait-vbr",
+      "name": "Wait 20s (VBR)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [-180, 580]
+    },
+    {
+      "parameters": {
+        "height": 100,
+        "width": 1200,
+        "content": "## 🎨 WAN 2.2 VACE INPAINTING SECTION (hosted on FAL)\nAI-powered background generation based on prompt"
+      },
+      "id": "sticky-section-fal",
+      "name": "Section: FAL VACE",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [60, 680],
+      "notesBackgroundColor": 5
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {"name": "mask_video_url", "type": "string", "value": "={{ $json.processed_mask_url }}"},
+            {"name": "original_video_url", "type": "string", "value": "={{ $json.source_video_url }}"},
+            {"name": "prompt", "type": "string", "value": "={{ $('Merge Triggers').item.json.prompt }}"},
+            {"name": "ref_image_url", "type": "string", "value": "={{ $('Merge Triggers').item.json.ref_image_url }}"}
+          ]
+        }
+      },
+      "id": "prepare-fal-input",
+      "name": "Prepare FAL Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [80, 460]
+    },
+    {
+      "parameters": {
+        "url": "https://queue.fal.run/fal-ai/wan-22-vace-fun-a14b/inpainting",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "=Key {{ $vars.FAL_KEY }}"},
+            {"name": "Content-Type", "value": "application/json"}
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"prompt\": \"{{ $json.prompt }}\",\n  \"video_url\": \"{{ $json.original_video_url }}\",\n  \"mask_video_url\": \"{{ $json.mask_video_url }}\",\n  \"ref_image_urls\": [\"{{ $json.ref_image_url }}\"],\n  \"resolution\": \"auto\",\n  \"aspect_ratio\": \"auto\",\n  \"match_input_num_frames\": true,\n  \"match_input_frames_per_second\": true,\n  \"num_inference_steps\": 50,\n  \"guidance_scale\": 5,\n  \"video_quality\": \"high\",\n  \"enable_prompt_expansion\": true,\n  \"enable_safety_checker\": true\n}"
+      },
+      "id": "fal-submit",
+      "name": "FAL – Submit Inpainting",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [300, 760]
+    },
+    {
+      "parameters": {
+        "url": "=https://queue.fal.run/fal-ai/wan-22-vace-fun-a14b/requests/{{ $json.request_id }}/status",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "=Key {{ $vars.FAL_KEY }}"}
+          ]
+        },
+        "options": {
+          "response": {"response": {"responseFormat": "json", "neverError": true}}
+        }
+      },
+      "id": "fal-status",
+      "name": "FAL – Check Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 760]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {"leftValue": "={{ $json.status }}", "operator": {"type": "string", "operation": "equals"}, "rightValue": "COMPLETED", "id": "ok"}
+          ],
+          "options": {"typeValidation": "strict", "caseSensitive": true}
+        }
+      },
+      "id": "if-fal-done",
+      "name": "FAL Completed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [740, 760]
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "id": "wait-fal",
+      "name": "Wait 30s (FAL)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [740, 880]
+    },
+    {
+      "parameters": {
+        "url": "=https://queue.fal.run/fal-ai/wan-22-vace-fun-a14b/requests/{{ $('FAL – Submit Inpainting').item.json.request_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {"name": "Authorization", "value": "=Key {{ $vars.FAL_KEY }}"}
+          ]
+        }
+      },
+      "id": "fal-result",
+      "name": "FAL – Get Result",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [960, 760]
+    },
+    {
+      "parameters": {
+        "height": 100,
+        "width": 900,
+        "content": "## 💾 OUTPUT SECTION\nDownload final video → Upload to Google Drive → Return response"
+      },
+      "id": "sticky-section-output",
+      "name": "Section: Output",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1180, 980],
+      "notesBackgroundColor": 3
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.video.url }}",
+        "options": {
+          "response": {"response": {"responseFormat": "file"}}
+        }
+      },
+      "id": "download-final",
+      "name": "Download Final Video",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1180, 1060]
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "binaryPropertyName": "data",
+        "name": "=ai_background_change_{{ new Date().getTime() }}.mp4",
+        "driveId": {"__rl": true, "mode": "list", "value": "My Drive"},
+        "folderId": {"__rl": true, "mode": "list", "value": "root"},
+        "options": {"simplifyOutput": true}
+      },
+      "id": "gdrive-upload",
+      "name": "Upload to Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1400, 1060]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "name": "response",
+              "type": "object",
+              "value": "={{ {\n  success: true,\n  video_url: $json.webViewLink,\n  drive_file_id: $json.id,\n  prompt: $('Merge Triggers').item.json.prompt,\n  original_video: $('Merge Triggers').item.json.video_url,\n  source: 'google_drive',\n  message: 'AI background change completed successfully'\n} }}"
+            }
+          ]
+        }
+      },
+      "id": "build-response",
+      "name": "Build Response",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [1620, 1060]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {"leftValue": "={{ $('Merge Triggers').item.json.source }}", "operator": {"type": "string", "operation": "equals"}, "rightValue": "webhook", "id": "is-webhook"}
+          ],
+          "options": {"typeValidation": "strict", "caseSensitive": true}
+        }
+      },
+      "id": "if-webhook",
+      "name": "From Webhook?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1840, 1060]
+    },
+    {
+      "parameters": {
+        "responseBody": "={{ $json.response ?? $json }}",
+        "responseCode": 200
+      },
+      "id": "respond",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2060, 960]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {"name": "final_result", "type": "object", "value": "={{ $json.response ?? $json }}"}
+          ]
+        }
+      },
+      "id": "manual-complete",
+      "name": "Manual Test Complete",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [2060, 1160]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {"main": [[{"node": "Extract Webhook Data", "type": "main", "index": 0}]]},
+    "Manual Trigger": {"main": [[{"node": "Sample Input (Edit Here)", "type": "main", "index": 0}]]},
+    "Extract Webhook Data": {"main": [[{"node": "Merge Triggers", "type": "main", "index": 0}]]},
+    "Sample Input (Edit Here)": {"main": [[{"node": "Merge Triggers", "type": "main", "index": 1}]]},
+    "Merge Triggers": {"main": [[{"node": "VBR – Create Job", "type": "main", "index": 0}]]},
+    "VBR – Create Job": {"main": [[{"node": "VBR – Start Processing", "type": "main", "index": 0}]]},
+    "VBR – Start Processing": {"main": [[{"node": "VBR – Check Status", "type": "main", "index": 0}]]},
+    "VBR – Check Status": {"main": [[{"node": "VBR Completed?", "type": "main", "index": 0}]]},
+    "VBR Completed?": {"main": [
+      [{"node": "Prepare FAL Input", "type": "main", "index": 0}],
+      [{"node": "Wait 20s (VBR)", "type": "main", "index": 0}]
+    ]},
+    "Wait 20s (VBR)": {"main": [[{"node": "VBR – Check Status", "type": "main", "index": 0}]]},
+    "Prepare FAL Input": {"main": [[{"node": "FAL – Submit Inpainting", "type": "main", "index": 0}]]},
+    "FAL – Submit Inpainting": {"main": [[{"node": "FAL – Check Status", "type": "main", "index": 0}]]},
+    "FAL – Check Status": {"main": [[{"node": "FAL Completed?", "type": "main", "index": 0}]]},
+    "FAL Completed?": {"main": [
+      [{"node": "FAL – Get Result", "type": "main", "index": 0}],
+      [{"node": "Wait 30s (FAL)", "type": "main", "index": 0}]
+    ]},
+    "Wait 30s (FAL)": {"main": [[{"node": "FAL – Check Status", "type": "main", "index": 0}]]},
+    "FAL – Get Result": {"main": [[{"node": "Download Final Video", "type": "main", "index": 0}]]},
+    "Download Final Video": {"main": [[{"node": "Upload to Google Drive", "type": "main", "index": 0}]]},
+    "Upload to Google Drive": {"main": [[{"node": "Build Response", "type": "main", "index": 0}]]},
+    "Build Response": {"main": [[{"node": "From Webhook?", "type": "main", "index": 0}]]},
+    "From Webhook?": {"main": [
+      [{"node": "Respond to Webhook", "type": "main", "index": 0}],
+      [{"node": "Manual Test Complete", "type": "main", "index": 0}]
+    ]}
+  },
+  "settings": {"executionOrder": "v1"}
+}
