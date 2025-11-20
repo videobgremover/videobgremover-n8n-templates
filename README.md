@@ -81,7 +81,7 @@ Generate custom backgrounds with AI from text prompts, remove video background, 
 ---
 
 ### 05-change-video-background-ai.json
-AI-powered background change using Wan 2.2 VACE: Remove background → AI generates new background from text prompt.
+AI-powered background change using Wan 2.2 VACE: Remove background → AI generates new background from text prompt. (Does not work very well)
 
 **Features:**
 - Background removal with VideoBGRemover (extracts mask)
@@ -95,7 +95,6 @@ AI-powered background change using Wan 2.2 VACE: Remove background → AI genera
 - Creative video transformations without stock footage
 - Product demos with imaginative AI-generated backgrounds
 - Social media content with unique, custom scenes
-- Background replacement with full creative control
 
 **Example prompts:**
 - "A futuristic cyberpunk city at night"
@@ -104,6 +103,37 @@ AI-powered background change using Wan 2.2 VACE: Remove background → AI genera
 - "A magical forest with glowing trees"
 
 **Setup:** ~10 min (2 API keys) | **Processing:** 7-10 min total
+
+---
+
+### 06-veo3-mobile-lottie-animation.json
+Generate mobile animations with Veo 3, remove background, export as Lottie JSON for iOS/Android apps.
+
+**Features:**
+- Google Veo 3 AI animation generation (4-8 seconds)
+- 1:1 square aspect ratio (mobile-optimized)
+- Background removal with VideoBGRemover
+- Lottie JSON export with full transparency
+- Audio disabled (saves 50% credits)
+- Tiny file size (30-150KB)
+- Google Drive upload
+- Status polling with retry logic
+
+**Perfect for:**
+- Mobile app animations (like Duolingo)
+- Loading screens and onboarding flows
+- UI micro-interactions and transitions
+- Character animations for iOS/Android
+- Tutorial and walkthrough animations
+- App Store preview assets
+
+**Output format:**
+- `.json` file (Lottie format)
+- Compatible with lottie-ios, lottie-android, lottie-react-native
+- Full alpha channel transparency via WebP
+- Vector-scalable, hardware-accelerated
+
+**Setup:** ~7 min (2 API keys) | **Processing:** 5-8 min per animation
 
 ---
 
@@ -160,6 +190,18 @@ AI-powered background change using Wan 2.2 VACE: Remove background → AI genera
    - `FAL_KEY` → Get from https://fal.ai/dashboard/keys
 5. Connect Google Drive
 6. Test with sample video + background prompt
+
+### Template 06: Mobile Animation (Veo 3 + Lottie)
+
+1. In n8n, go to **Workflows → Import from URL**
+2. Paste: `https://raw.githubusercontent.com/videobgremover/videobgremover-n8n-templates/main/templates/06-veo3-mobile-lottie-animation.json`
+3. Click **Import**
+4. Add API keys: **Settings → Variables**
+   - `FAL_KEY` → Get from https://fal.ai/dashboard/keys
+   - `VIDEOBGREMOVER_KEY` → Get from https://videobgremover.com/api-management
+5. Connect Google Drive
+6. Test with sample prompt (e.g., "Cute owl celebrating with confetti")
+7. Download `.json` file and use in your mobile app with Lottie library
 
 Get your VideoBGRemover API key: https://videobgremover.com/api-management
 
